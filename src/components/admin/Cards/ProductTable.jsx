@@ -100,6 +100,31 @@ export default function ProductTable() {
       });
   };
 
+  // Set Active Product
+  const handleActive = (e) => {
+    const backendURL = import.meta.env.VITE_BACKEND_URL;
+
+    const formData = new FormData();
+    formData.append("productId", e.target.value);
+    formData.append("isChecked", e.target.checked);
+
+    setIsLoading(true);
+
+    axios
+      .post(`${backendURL}/updateActiveProduct`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        dispatch(fetchProduct()).then(() => {
+          alert(res.data.message);
+          setIsLoading(false);
+        });
+      })
+      .catch((err) => console.log(err));
+  };
+
   // Delete Product
   const handleDeleteProduct = (id) => {
     const backendURL = import.meta.env.VITE_BACKEND_URL;
@@ -307,7 +332,7 @@ export default function ProductTable() {
                 <th className={"px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"}>Year</th>
                 <th className={"px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"}>Price</th>
                 <th className={"px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"}>Weight (gr)</th>
-                {/* <th className={"px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"}>Is Active</th> */}
+                <th className={"px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"}>Is Active</th>
                 <th className={"px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"}>Action</th>
               </tr>
             </thead>
@@ -332,9 +357,9 @@ export default function ProductTable() {
                       }).format(item.price)}
                     </td>
                     <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{item.weight}</td>
-                    {/* <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-    <input type="checkbox" className="toggle" />
-  </td> */}
+                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                      <input value={item.id} type="checkbox" checked={item.isActive ? true : false} className="checkbox" onChange={handleActive} />
+                    </td>
                     <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                       <div className="flex items-center gap-x-1">
                         <button className="btn btn-primary btn-xs text-white" onClick={() => document.getElementById(`editProduct${item.id}`).showModal()}>
@@ -483,9 +508,9 @@ export default function ProductTable() {
                       }).format(product.price)}
                     </td>
                     <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{product.weight}</td>
-                    {/* <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-      <input type="checkbox" className="toggle" />
-    </td> */}
+                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                      <input value={product.id} type="checkbox" checked={product.isActive ? true : false} className="checkbox" onChange={handleActive} />
+                    </td>
                     <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                       <div className="flex items-center gap-x-1">
                         <button className="btn btn-primary btn-xs text-white" onClick={() => document.getElementById(`editProduct${product.id}`).showModal()}>

@@ -61,21 +61,25 @@ const ProductPage = () => {
             <span className="loading loading-bars loading-lg text-first"></span>
           </div>
         ) : searchKey ? (
-          searchProducts?.map((item) => {
-            return (
-              <div key={item.id}>
-                <ProductCard id={item.id} title={item.title} price={item.price} imageUrl={item.image} />
-              </div>
-            );
-          })
+          searchProducts
+            ?.filter((item) => item.isActive)
+            .map((item) => {
+              return (
+                <div key={item.id}>
+                  <ProductCard id={item.id} title={item.title} price={item.price} imageUrl={item.image} />
+                </div>
+              );
+            })
         ) : (
-          products?.map((product) => {
-            return (
-              <div key={product.id}>
-                <ProductCard id={product.id} title={product.title} price={product.price} imageUrl={product.image} />
-              </div>
-            );
-          })
+          products
+            ?.filter((item) => item.isActive)
+            .map((product) => {
+              return (
+                <div key={product.id}>
+                  <ProductCard id={product.id} title={product.title} price={product.price} imageUrl={product.image} />
+                </div>
+              );
+            })
         )}
       </div>
       <Footer />

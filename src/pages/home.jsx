@@ -44,7 +44,7 @@ const HomePage = () => {
 
   useEffect(() => {
     if (newArrivals) {
-      const images = newArrivals.map((item) => item.image);
+      const images = newArrivals.filter((item) => item.isActive).map((item) => item.image);
       setImages(images);
     }
   }, [newArrivals]);
@@ -69,13 +69,15 @@ const HomePage = () => {
             <span className="loading loading-bars loading-lg text-first"></span>
           </div>
         ) : (
-          newArrivals.map((product) => {
-            return (
-              <div key={product.id}>
-                <ProductCard id={product.id} title={product.title} price={product.price} imageUrl={product.image} />
-              </div>
-            );
-          })
+          newArrivals
+            .filter((item) => item.isActive)
+            .map((product) => {
+              return (
+                <div key={product.id}>
+                  <ProductCard id={product.id} title={product.title} price={product.price} imageUrl={product.image} />
+                </div>
+              );
+            })
         )}
       </div>
       <Footer />
