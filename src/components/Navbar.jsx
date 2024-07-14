@@ -138,7 +138,7 @@ const Navbar = () => {
                       <span className="font-bold text-lg">{(!loading && carts?.length) || 0} Item(s)</span>
                       <span className="text-second">Total: Rp{(!loading && indoCurrency(totalPrice)) || 0},00</span>
                       <div className="card-actions">
-                        <a className="btn bg-first text-third btn-block" href="/cart">
+                        <a className="btn bg-first text-third btn-block" href="/cart" disabled={loading ? true : false}>
                           View cart
                         </a>
                       </div>
@@ -149,7 +149,7 @@ const Navbar = () => {
               <div className="dropdown dropdown-end">
                 <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
                   <div className="w-10 rounded-full">
-                    <img alt="Tailwind CSS Navbar component" src={`${(!userLoading && user?.data.avatar) || "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"}`} />
+                    <img src={`${(!userLoading && user?.data.avatar) || "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"}`} />
                   </div>
                 </div>
                 <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">

@@ -75,7 +75,7 @@ const ProductCard = (props) => {
             Add to Cart
           </button>
         </div>
-        <div className="p-2">
+        <div className="p-3 mt-3">
           <a href={`/product/${slugify(title)}`} className="text-lg font-semibold duration-700 hover:text-yellow-600">
             {title.slice(0, 30)}
           </a>

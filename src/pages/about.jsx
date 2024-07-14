@@ -1,7 +1,8 @@
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import useLogin from "../hooks/useLogin";
+import logo from "../img/logo.jpg";
 
 const About = () => {
   useEffect(() => {
@@ -18,14 +19,11 @@ const About = () => {
       <div className="text-center font-semibold text-2xl mt-8">About Us</div>
       <div className="flex flex-wrap items-center justify-center gap-10 md:px-12 mb-20 mt-10 grow">
         <div className="flex md:flex-row flex-col items-center justify-center gap-10 w-3/4">
-          <img
-            src="https://scontent.fmlg5-1.fna.fbcdn.net/v/t39.30808-6/445221753_26023061673951527_1462037541070816235_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=OskB4GghUXcQ7kNvgEZaUMc&_nc_ht=scontent.fmlg5-1.fna&oh=00_AYB73xivJoN9dmYvNr9SHSGAmwVMUfWVGL6OTaSBkGq9Bg&oe=66812356"
-            className="rounded-full"
-          />
+          <img src={logo} className="rounded-full" />
           <div className="text-justify text-sm md:text-lg">
-            JOECAPE telah beroperasi sejak tahun 2013 dan menjadi salah satu tujuan belanja favorit bagi pecinta barang-barang bekas berkualitas. Sejak awal berdiri, kami telah menawarkan koleksi pakaian yang cukup unik dan bervariasi.
-            Berkomitmen untuk mempromosikan konsumsi yang lebih ramah lingkungan, terus mencari dan memilih barang-barang berkualitas dari sumber-sumber terpercaya untuk memastikan pelanggan mendapatkan nilai terbaik dari setiap pembelian.
-            Dengan suasana toko yang nyaman dan staf yang bersahabat, kami telah menjadi destinasi belanja yang menyenangkan bagi para pencari barang unik dan berharga.
+            <b>JOECAPE</b> telah beroperasi sejak tahun 2013 dan menjadi salah satu tujuan belanja favorit bagi pecinta barang-barang bekas berkualitas. Sejak awal berdiri, kami telah menawarkan koleksi pakaian yang cukup unik dan
+            bervariasi. Berkomitmen untuk mempromosikan konsumsi yang lebih ramah lingkungan, terus mencari dan memilih barang-barang berkualitas dari sumber-sumber terpercaya untuk memastikan pelanggan mendapatkan nilai terbaik dari setiap
+            pembelian. Dengan suasana toko yang nyaman dan staf yang bersahabat, kami telah menjadi destinasi belanja yang menyenangkan bagi para pencari barang unik dan berharga.
           </div>
         </div>
         <iframe

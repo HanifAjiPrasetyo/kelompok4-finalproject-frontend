@@ -7,22 +7,22 @@ export default function PaymentTable() {
   const { payments } = useSelector((state) => state.payment);
   const paymentLoading = useSelector((state) => state.payment.loading);
 
-  // Search Orders
-  const [searchKey, setSearchKey] = useState("");
-  const [searchPayments, setSearchPayments] = useState([]);
+  // // Search Orders
+  // const [searchKey, setSearchKey] = useState("");
+  // const [searchPayments, setSearchPayments] = useState([]);
 
-  useEffect(() => {
-    if (searchKey && payments) {
-      const items = payments.filter(
-        (item) =>
-          item.order_id.toLowerCase().includes(searchKey.toLowerCase()) ||
-          item.settlement_time.toLowerCase().includes(searchKey.toLowerCase()) ||
-          item.user.name.toLowerCase().includes(searchKey.toLowerCase()) ||
-          item.bank.toLowerCase().includes(searchKey.toLowerCase())
-      );
-      setSearchPayments(items);
-    }
-  }, [payments, searchKey]);
+  // useEffect(() => {
+  //   if (searchKey && payments) {
+  //     const items = payments.filter(
+  //       (item) =>
+  //         item.order_id.toLowerCase().includes(searchKey.toLowerCase()) ||
+  //         item.settlement_time.toLowerCase().includes(searchKey.toLowerCase()) ||
+  //         item.user.name.toLowerCase().includes(searchKey.toLowerCase()) ||
+  //         item.bank.toLowerCase().includes(searchKey.toLowerCase())
+  //     );
+  //     setSearchPayments(items);
+  //   }
+  // }, [payments, searchKey]);
 
   return (
     <>
@@ -37,7 +37,7 @@ export default function PaymentTable() {
             <div className="relative w-full px-4 max-w-full flex-grow flex-1">
               <h3 className={"font-semibold text-lg"}>Payments</h3>
             </div>
-            <div className="form-control">
+            {/* <div className="form-control">
               <input
                 type="text"
                 placeholder="Search"
@@ -47,7 +47,7 @@ export default function PaymentTable() {
                   setSearchKey(e.target.value);
                 }}
               />
-            </div>
+            </div> */}
           </div>
         </div>
         <div className="block w-full overflow-x-auto">
@@ -63,30 +63,7 @@ export default function PaymentTable() {
               </tr>
             </thead>
             <tbody>
-              {searchPayments && searchKey ? (
-                searchPayments.map((item) => {
-                  return (
-                    <tr key={item.id}>
-                      <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{item.order_id}</td>
-                      <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                        <div className="flex flex-col gap-2">
-                          <div className="text-sm">{item.user.name}</div>
-                          <div className="text-xs opacity-75">{item.user.email}</div>
-                        </div>
-                      </td>
-                      <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 capitalize">{item.status}</td>
-                      <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                        {Intl.NumberFormat("id", {
-                          style: "currency",
-                          currency: "IDR",
-                        }).format(item.amount)}
-                      </td>
-                      <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 capitalize">{item.bank}</td>
-                      <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{item.settlement_time}</td>
-                    </tr>
-                  );
-                })
-              ) : payments.length > 0 ? (
+              {payments.length > 0 ? (
                 payments.map((item) => {
                   return (
                     <tr key={item.id}>

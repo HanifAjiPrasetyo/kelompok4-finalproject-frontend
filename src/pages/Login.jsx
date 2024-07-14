@@ -43,7 +43,12 @@ function Login() {
     const backendURL = import.meta.env.VITE_BACKEND_URL;
 
     await axios
-      .post(`${backendURL}/auth/login`, formData)
+      .post(`${backendURL}/auth/login`, formData, {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      })
       .then((response) => {
         setIsLoginLoading(false);
         dispatch(login({ token: response.data.access_token, expired: response.data.expires_in }));
@@ -105,8 +110,7 @@ function Login() {
             <div className="text-center">
               <p className="text-md text-gray-600">
                 Don’t have an account?
-                <Link to="/register" className="text-[#E4C59E] hover:text-orange-500 font-medium">
-                  {" "}
+                <Link to="/register" className="text-second hover:text-third font-medium ms-1">
                   Sign Up
                 </Link>
               </p>

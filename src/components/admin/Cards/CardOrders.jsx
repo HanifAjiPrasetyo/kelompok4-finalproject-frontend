@@ -133,7 +133,7 @@ export default function CardOrders() {
                       <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                         {item.status === "Unpaid" && <div className="badge badge-warning">{item.status}</div>}
                         {item.status === "Paid" && <div className="badge badge-primary">{item.status}</div>}
-                        {item.status === "Accepted" && <div className="badge badge-success">{item.status}</div>}
+                        {item.status === "Accepted" && <div className="badge badge-success text-white">{item.status}</div>}
                       </td>
                       <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                         {item.status === "Paid" ? (

@@ -99,7 +99,7 @@ const DetailProductPage = () => {
             Year : {product.year} | Weight : {product.weight} gr
           </div>
           <div className="text-slate-500 font-semibold">Rp{indoCurrency(product.price)},00</div>
-          <div className="">
+          <div className="mt-8">
             <div className="font-semibold text-lg">Description:</div>
             <p className="text-slate-500">{product.description}</p>
           </div>

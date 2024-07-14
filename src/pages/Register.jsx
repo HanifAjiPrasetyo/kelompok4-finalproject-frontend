@@ -97,7 +97,7 @@ function Register() {
             <div className="text-center">
               <p className="text-lg text-gray-600">
                 Already have an account?
-                <Link to="/login" className="text-[#E4C59E] hover:text-orange-500 font-medium">
+                <Link to="/login" className="text-second hover:text-third font-medium ms-1">
                   Sign in
                 </Link>
               </p>

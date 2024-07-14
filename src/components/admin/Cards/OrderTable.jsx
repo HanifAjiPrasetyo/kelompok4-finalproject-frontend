@@ -148,15 +148,48 @@ export default function OrderTable() {
                           );
                         })}
                       </td>
-                      <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{item.status}</td>
+                      <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                        {item.status === "Unpaid" && <div className="badge badge-warning">{item.status}</div>}
+                        {item.status === "Paid" && <div className="badge badge-primary">{item.status}</div>}
+                        {item.status === "Accepted" && <div className="badge badge-success text-white">{item.status}</div>}
+                      </td>
                       <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                         {item.status === "Paid" ? (
                           <div className="flex items-center gap-2 justify-center">
-                            <button className="btn btn-success btn-xs text-white">Accept</button>
-                            <button className="btn btn-error btn-xs text-white">Reject</button>
+                            <button
+                              className="btn btn-success btn-xs text-white"
+                              onClick={() => {
+                                if (confirm("Accept order?")) {
+                                  handleAcceptOrder(item.id);
+                                }
+                              }}
+                            >
+                              Accept
+                            </button>
+                            <button
+                              className="btn btn-error btn-xs text-white"
+                              onClick={() => {
+                                if (confirm("Reject order?")) {
+                                  handleRejectOrder(item.id);
+                                }
+                              }}
+                            >
+                              Reject
+                            </button>
                           </div>
                         ) : (
-                          item.status === "Unpaid" && <button className="btn btn-error btn-xs text-white">Reject</button>
+                          item.status === "Unpaid" && (
+                            <button
+                              className="btn btn-error btn-xs text-white"
+                              onClick={(e) => {
+                                if (confirm("Reject order?")) {
+                                  handleRejectOrder(e, item.id);
+                                }
+                              }}
+                            >
+                              Reject
+                            </button>
+                          )
                         )}
                       </td>
                       <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
@@ -204,7 +237,7 @@ export default function OrderTable() {
                       <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                         {item.status === "Unpaid" && <div className="badge badge-warning">{item.status}</div>}
                         {item.status === "Paid" && <div className="badge badge-primary">{item.status}</div>}
-                        {item.status === "Accepted" && <div className="badge badge-success">{item.status}</div>}
+                        {item.status === "Accepted" && <div className="badge badge-success text-white">{item.status}</div>}
                       </td>
                       <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                         {item.status === "Paid" ? (
