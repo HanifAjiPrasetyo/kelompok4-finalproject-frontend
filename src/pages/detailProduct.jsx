@@ -79,7 +79,7 @@ const DetailProductPage = () => {
       <Header title={product.title} />
       {loading && (
         <div className="fixed top-32 left-1/2 text-lg z-[9999]">
-          <span className="loading loading-spinner loading-lg text-first"></span>
+          <span className="loading loading-bars loading-lg text-first"></span>
         </div>
       )}
       <div className="flex flex-wrap items-center justify-center gap-5">

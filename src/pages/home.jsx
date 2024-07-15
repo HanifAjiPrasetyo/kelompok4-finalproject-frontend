@@ -8,6 +8,7 @@ import { fetchProduct } from "../slices/productSlice";
 import Carousel from "../components/Carousel";
 import useProvince from "../hooks/useProvince";
 import useCart from "../hooks/useCart";
+import { FaArrowAltCircleRight } from "react-icons/fa";
 
 const HomePage = () => {
   useEffect(() => {
@@ -54,18 +55,20 @@ const HomePage = () => {
       <div className="bg-third">
         <Navbar />
       </div>
-      {cartLoading ||
-        newArrivalsLoading ||
-        (provinceLoading && (
-          <div className="fixed top-1/3 left-1/2 text-lg z-[99999]">
-            <span className="loading loading-bars loading-lg text-first"></span>
-          </div>
-        ))}
+      {cartLoading && (
+        <div className="fixed top-1/3 left-1/2 text-lg z-[9999]">
+          <span className="loading loading-bars loading-lg text-first"></span>
+        </div>
+      )}
       {images.length > 0 && <Carousel images={images} />}
-      <div className="text-center font-semibold text-2xl mt-24">New Arrivals</div>
-      <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-12 md:px-16 my-20 grow">
+      <a href="/product" className={`btn bg-first text-third md:btn-lg mx-auto duration-700 border-0 hover:bg-third -top-24 md:-top-28 hover:text-first ${loading ? "hidden" : "relative"}`}>
+        Shop Now
+        <FaArrowAltCircleRight />
+      </a>
+      <div className="text-center font-semibold text-2xl mt-5">New Arrivals</div>
+      <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-16 md:px-16 my-20 grow">
         {loading ? (
-          <div className="fixed top-1/3 left-1/2 text-lg z-[99999]">
+          <div className="fixed top-1/3 left-1/2 text-lg">
             <span className="loading loading-bars loading-lg text-first"></span>
           </div>
         ) : (

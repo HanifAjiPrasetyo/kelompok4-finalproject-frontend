@@ -24,6 +24,7 @@ const Cart = () => {
   }, [dispatch]);
 
   const { user } = useSelector((state) => state.user);
+  console.log(user);
 
   const { carts, loading, totalPrice } = useSelector((state) => state.cart);
 
@@ -146,7 +147,7 @@ const Cart = () => {
               <button
                 className="px-3 py-1 rounded duration-500 text-third bg-first hover:text-first hover:bg-third"
                 onClick={() => {
-                  if (!user?.address) {
+                  if (!user?.address || !user?.address.city || !user?.address.province) {
                     alert("Please update your address first!");
                     navigate("/profile");
                   } else {

@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { getUser } from "../../../slices/userSlice";
 import { getCities, getPostalCode } from "../../../api";
-import { fetchProvince } from "../../../slices/provinceSlice";
 
 function CardSettings() {
   const { token } = useSelector((state) => state.auth);
@@ -11,12 +10,6 @@ function CardSettings() {
   const { provinces, loading } = useSelector((state) => state.province);
 
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (token) {
-      dispatch(getUser(token));
-    }
-  }, [token]);
 
   // Fetch Regions
   const [isCityLoading, setIsCityLoading] = useState(false);
@@ -67,7 +60,6 @@ function CardSettings() {
   const [phone, setPhone] = useState(user?.data.phone);
   const [province, setProvince] = useState(user?.address && user?.address.province);
   const [city, setCity] = useState(user?.address && user?.address.city);
-  const [addressLine, setAddressLine] = useState(user?.address && user?.address.address_line);
   const [updateValidation, setUpdateValidation] = useState([]);
   const [profileImage, setProfileImage] = useState(null);
 
@@ -101,10 +93,10 @@ function CardSettings() {
         dispatch(getUser(token));
         alert(res.data.message);
         setUpdateAvatarLoading(false);
+        window.location.reload();
       })
       .catch((err) => console.log(err.response.data));
   };
-  console.log(user);
 
   const handleUpdateUser = async () => {
     const backendURL = import.meta.env.VITE_BACKEND_URL;
@@ -114,10 +106,6 @@ function CardSettings() {
       name: name,
       email: email,
       phone: phone,
-      province: province,
-      city: city,
-      postal_code: postalCode,
-      address_line: addressLine,
     };
 
     setIsLoading(true);
@@ -133,10 +121,44 @@ function CardSettings() {
         dispatch(getUser(token));
         setIsLoading(false);
         alert(response.data.message);
+        window.location.reload();
       })
       .catch((err) => {
         setUpdateValidation(err.response.data);
         setIsLoading(false);
+      });
+  };
+
+  const [updateAddressLoading, setUpdateAddressLoading] = useState(false);
+
+  const handleUpdateAddress = () => {
+    const backendURL = import.meta.env.VITE_BACKEND_URL;
+
+    const formData = new FormData();
+
+    formData.append("province", province);
+    formData.append("city", city);
+    formData.append("postal_code", postalCode);
+
+    setUpdateAddressLoading(true);
+
+    axios
+      .post(`${backendURL}/user/updateAddress/${user?.data.id}`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        dispatch(getUser(token)).then(() => {
+          setUpdateAddressLoading(false);
+          alert(response.data.message);
+          document.getElementById("addressModal_").close();
+          window.location.reload();
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        setUpdateAddressLoading(false);
       });
   };
 
@@ -267,8 +289,8 @@ function CardSettings() {
               </div>
 
               <div className="lg:w-1/2 px-4 flex flex-col md:flex-row items-center gap-x-3">
-                <div className="mt-3 w-1/2">
-                  <button type="button" className="btn btn-primary" onClick={() => document.getElementById("passwordModal").showModal()}>
+                <div className="mt-3">
+                  <button type="button" className="btn btn-primary text-white" onClick={() => document.getElementById("passwordModal").showModal()}>
                     Change Password
                   </button>
                   <dialog id="passwordModal" className="modal">
@@ -324,11 +346,99 @@ function CardSettings() {
                 </div>
               </div>
             </div>
-
             <hr className="mt-6 border-b-1 border-second" />
-
-            <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">Address Information</h6>
-
+            <div className="flex flex-wrap items-center gap-5 mt-5 mb-5">
+              <h6 className="text-blueGray-400 text-sm font-bold uppercase">Address Information</h6>
+              <button type="button" className="btn btn-primary text-white" onClick={() => document.getElementById("addressModal_").showModal()}>
+                Change Address
+              </button>
+            </div>
+            <dialog id="addressModal_" className="modal">
+              <div className="modal-box">
+                <h3 className="font-bold text-lg">Change Address</h3>
+                {updateAddressLoading && (
+                  <div className="mx-auto text-center mt-2">
+                    <span className="loading loading-spinner loading-lg text-first"></span>
+                  </div>
+                )}
+                <div className="modal-action flex flex-col gap-y-4">
+                  <div className="mb-2">
+                    <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">Province</label>
+                    <select
+                      className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                      onChange={(e) => {
+                        fetchCities(e.target.value);
+                        setProvinceName(e.target.value);
+                      }}
+                    >
+                      <option selected disabled>
+                        Choose Province
+                      </option>
+                      {loading ? (
+                        <option>Loading...</option>
+                      ) : (
+                        provinces?.map((province, idx) => {
+                          return (
+                            <option key={idx} className="text-sm" value={province.province_id}>
+                              {province.province}
+                            </option>
+                          );
+                        })
+                      )}
+                    </select>
+                  </div>
+                  <div className="mb-2">
+                    <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">City</label>
+                    <select
+                      className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                      onChange={(e) => {
+                        fetchPostalCode(e.target.value);
+                        setCityName(e.target.value);
+                      }}
+                    >
+                      <option selected disabled>
+                        Choose City
+                      </option>
+                      {isCityLoading ? (
+                        <option>Loading...</option>
+                      ) : (
+                        cities?.map((city, idx) => {
+                          return (
+                            <option key={idx} value={city.city_id}>
+                              {city.type} {city.city_name}
+                            </option>
+                          );
+                        })
+                      )}
+                    </select>
+                  </div>
+                  <div className="mb-2">
+                    <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">Postal Code</label>
+                    <select className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150">
+                      {isPostalCodeLoading ? <option>Loading...</option> : <option value={postalCode}>{postalCode}</option>}
+                    </select>
+                  </div>
+                  <div className="flex items-center gap-x-3 mt-3">
+                    <button
+                      className="btn btn-success text-white w-1/2"
+                      type="button"
+                      disabled={isPostalCodeLoading || loading || isCityLoading ? true : false}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        if (confirm("Save address?")) {
+                          handleUpdateAddress();
+                        }
+                      }}
+                    >
+                      Save
+                    </button>
+                    <button type="button" className="btn bg-slate-300 w-1/2" onClick={() => document.getElementById("addressModal_").close()}>
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </dialog>
             <div className="flex flex-wrap">
               <div className="w-full lg:w-4/12 px-4">
                 <div className="relative w-full mb-3">
@@ -367,103 +477,6 @@ function CardSettings() {
                     readOnly
                     disabled
                   />
-                </div>
-              </div>
-              <div className="w-full lg:w-12/12 px-4">
-                <div className="relative w-full mb-3">
-                  <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="grid-password">
-                    Address Detail (RT / RW)
-                  </label>
-                  <textarea
-                    defaultValue={(user?.address && user?.address.address_line) || addressLine}
-                    readOnly
-                    disabled
-                    className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                  ></textarea>
-                </div>
-              </div>
-            </div>
-
-            <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">Edit Address Information</h6>
-
-            <div className="flex flex-wrap">
-              <div className="w-full lg:w-4/12 px-4">
-                <div className="relative w-full mb-3">
-                  <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="grid-password">
-                    Province
-                  </label>
-                  <select
-                    className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                    onChange={(e) => {
-                      fetchCities(e.target.value);
-                      setProvinceName(e.target.value);
-                    }}
-                  >
-                    <option selected disabled>
-                      Choose Province
-                    </option>
-                    {loading ? (
-                      <option>Loading...</option>
-                    ) : (
-                      provinces?.map((province, idx) => {
-                        return (
-                          <option key={idx} className="text-sm" value={province.province_id}>
-                            {province.province}
-                          </option>
-                        );
-                      })
-                    )}
-                  </select>
-                </div>
-              </div>
-              <div className="w-full lg:w-4/12 px-4">
-                <div className="relative w-full mb-3">
-                  <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="grid-password">
-                    City
-                  </label>
-                  <select
-                    className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                    onChange={(e) => {
-                      fetchPostalCode(e.target.value);
-                      setCityName(e.target.value);
-                    }}
-                  >
-                    <option selected disabled>
-                      Choose City
-                    </option>
-                    {isCityLoading ? (
-                      <option>Loading...</option>
-                    ) : (
-                      cities?.map((city, idx) => {
-                        return (
-                          <option key={idx} value={city.city_id}>
-                            {city.type} {city.city_name}
-                          </option>
-                        );
-                      })
-                    )}
-                  </select>
-                </div>
-              </div>
-              <div className="w-full lg:w-4/12 px-4">
-                <div className="relative w-full mb-3">
-                  <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="grid-password">
-                    Postal Code
-                  </label>
-                  <select className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150">
-                    {isPostalCodeLoading ? <option>Loading...</option> : <option value={postalCode}>{postalCode}</option>}
-                  </select>
-                </div>
-              </div>
-              <div className="w-full lg:w-12/12 px-4">
-                <div className="relative w-full mb-3">
-                  <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="grid-password">
-                    Address Detail (RT / RW)
-                  </label>
-                  <textarea
-                    onChange={(e) => setAddressLine(e.target.value)}
-                    className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                  ></textarea>
                 </div>
               </div>
             </div>
