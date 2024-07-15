@@ -20,17 +20,6 @@ export default function CategoryTable() {
       .catch((err) => console.log(err.response.data.message));
   }, [token]);
 
-  // Search Category
-  // const [searchKey, setSearchKey] = useState("");
-  // const [searchCategory, setSearchCategory] = useState([]);
-
-  // useEffect(() => {
-  //   if (categories.length > 0 && Array.isArray(categories)) {
-  //     const items = categories.filter((item) => searchKey && (item.name.toLowerCase().includes(searchKey.toLowerCase()) || item.description.toLowerCase().includes(searchKey.toLowerCase())));
-  //     setSearchCategory(items);
-  //   }
-  // }, [categories, searchKey]);
-
   // Add Category
   const [name, setName] = useState(null);
   const [description, setDescription] = useState(null);
